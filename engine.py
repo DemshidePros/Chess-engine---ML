@@ -197,9 +197,15 @@ def get_best_move(board: chess.Board, depth: int):
     return best_move
 
 
+# GUIs often send time-control 'go' commands without a depth, and pure Python
+# search is slow, so use a modest default and cap the depth.
+DEFAULT_DEPTH = 3
+MAX_DEPTH = 4
+
+
 def uci_loop():
     board = chess.Board()
-    default_depth = 10
+    default_depth = DEFAULT_DEPTH
 
     while True:
         try:
@@ -252,9 +258,15 @@ def uci_loop():
                     if depth_idx + 1 < len(tokens):
                         depth = int(tokens[depth_idx + 1])
 
-                depth = min(depth, 10)
+                depth = max(1, min(depth, MAX_DEPTH))
 
-                best_move = get_best_move(board, depth)
+                try:
+                    best_move = get_best_move(board, depth)
+                except Exception as e:
+                    with open("error_log.txt", "a") as log:
+                        log.write(str(e) + "\n")
+                    legal = list(board.legal_moves)
+                    best_move = legal[0] if legal else None
                 if best_move:
                     print(f"bestmove {best_move.uci()}", flush=True)
                 else:
