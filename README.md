@@ -71,7 +71,22 @@ config.json               Piece values and piece-square tables
 move_filter_model.json    Trained logistic regression weights
 build_dataset.py          Parses PGN games into a labeled move dataset
 train_model.py            Trains the logistic regression model, exports weights
+play.py                   Terminal game against the engine
+requirements.txt          Runtime dependency (python-chess)
 ```
+
+## Play a game against it
+
+```bash
+pip install -r requirements.txt
+python play.py              # you are White, engine depth 3
+python play.py --black      # you are Black
+python play.py --depth 4    # stronger but slower engine (max 10)
+```
+
+Type moves like `e4`, `Nf3`, `O-O` or `e2e4`. Commands: `undo`, `resign`, `quit`.
+
+Or load `engine.py` in any UCI GUI (Arena, En Croissant, Cute Chess) as an engine.
 
 ## Running it
 
